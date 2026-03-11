@@ -16,7 +16,7 @@ export default function ProfilePage() {
   }, [status, router]);
 
   if (status === "loading") {
-    return <p>Loading...</p>;
+    return <p>Загрузка...</p>;
   }
 
   if (!session) {

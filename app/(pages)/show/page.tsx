@@ -15,7 +15,7 @@ export default function ShowPage() {
   }, [status, router]);
 
   if (status === "loading") {
-    return <p>Loading...</p>;
+    return <p>Загрузка...</p>;
   }
 
   if (!session) {
@@ -24,7 +24,7 @@ export default function ShowPage() {
 
   return (
     <div>
-      <h1>Show Page</h1>
+      <h3>Show Page</h3>
       <p>This is the show page.</p>
     </div>
   );
