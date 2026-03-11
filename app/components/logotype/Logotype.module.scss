@@ -5,3 +5,15 @@
     justify-content: space-between;
     align-items: center;
 }
+.logotype__logo {
+    display: flex;
+    align-items: center;
+}
+.logotype__text {
+    display: flex;
+    flex-direction: column;
+    font-weight: 700;
+}
+.logotype__small {
+    font-size: 10px;
+}

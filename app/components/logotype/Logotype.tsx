@@ -6,12 +6,18 @@ import logo from "@/public/images/Logotype.png";
 export default function Logotype() {
   return (
     <div className={styles.logotype}>
-      <Image
+     <div className={styles.logotype__logo}>
+       <Image
         src={logo}
         alt="WorkTime logo"
-        width={150}
-        height={54}
+        width={55}
+        height={55}
       />
+      <div className={styles.logotype__text}>
+        <span>WorkTime</span>
+        <span className={styles.logotype__small}>by ELFASA TASA</span>
+      </div>
+     </div>
       <a href="/profile">  <svg
     xmlns="http://www.w3.org/2000/svg"
     width="26"
