@@ -1,0 +1,13 @@
+@use "./default.scss";
+
+body {
+  max-width: 576px;
+  margin: 0 auto;
+  padding: 0 6px;
+    background: #000;
+    color: #fff;
+      font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}

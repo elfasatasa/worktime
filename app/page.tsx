@@ -1,24 +1,18 @@
 "use client"
 
-import { signIn, signOut, useSession } from "next-auth/react"
+import { useSession } from "next-auth/react"
+
+
 
 export default function Home() {
-  const { data: session } = useSession()
 
-  if (session) {
-    return (
-      <>
-        <p>Привет {session.user?.name}</p>
-        <button onClick={() => signOut()}>Выйти</button>
-      </>
-    )
-  }
+  const {data: session} = useSession()
 
+  console.log(session)
   return (
     <>
-      <button onClick={() => signIn("google")}>
-        Войти через Google
-      </button>
+   main page
+  
     </>
   )
 }
