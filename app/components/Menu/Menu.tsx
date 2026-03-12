@@ -73,7 +73,7 @@ export default function Menu() {
         return (
           <Link key={item.path} href={item.path} className={styles.menuItem}>
             {React.cloneElement(item.icon, {
-              stroke: isActive ? "#FF0AF7" : "#ffffff",
+              stroke: isActive ? "#9A19E5" : "#ffffff",
             })}
           </Link>
         );

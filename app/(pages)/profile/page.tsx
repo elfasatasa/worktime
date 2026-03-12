@@ -87,7 +87,7 @@ export default function ProfilePage() {
         <p style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "16px" }}>
           Ваш статус: {workStatus}{" "}
           <span 
-            style={{ cursor: "pointer", color: "white" }} 
+            style={{ cursor: "pointer", color: "#9A19E5" }} 
             onClick={() => setModalOpen(true)}
             title="Edit work status"
           >
