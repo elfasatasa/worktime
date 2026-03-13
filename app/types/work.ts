@@ -1,8 +1,12 @@
-export type Work = {
+
+
+export interface Work {
   id: number;
-  date: string; // Формат: "YYYY-MM-DD"
-    start_work: string; // Формат: "HH:MM"
-    end_work: string; // Формат: "HH:MM"
-    has_break: boolean;
-    is_day_off: boolean
-};
+  work_id: string;
+  date: string; // ISO format date string
+  start_work: string; // ISO format time string
+  end_work: string; // ISO format time string
+  has_break: boolean;
+  is_day_off: boolean;
+  work_type: string; // e.g., 'packer', 'driver', etc.
+}

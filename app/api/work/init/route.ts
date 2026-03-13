@@ -14,7 +14,8 @@ export async function GET() {
         start_work TIME NOT NULL,
         end_work TIME NOT NULL,
         has_break BOOLEAN DEFAULT false,
-        is_day_off BOOLEAN DEFAULT false
+        is_day_off BOOLEAN DEFAULT false,
+        work_type TEXT DEFAULT 'packer'
       );
     `;
 
