@@ -18,8 +18,8 @@ export default function EditPage() {
 
   // Новая смена
   const [newDate, setNewDate] = useState("");
-  const [startWork, setStartWork] = useState("09:00");
-  const [endWork, setEndWork] = useState("18:00");
+  const [startWork, setStartWork] = useState("00:00");
+  const [endWork, setEndWork] = useState("01:00");
   const [hasBreak, setHasBreak] = useState(false);
   const [isDayOff, setIsDayOff] = useState(false);
   const [workType, setWorkType] = useState("packer");
@@ -74,7 +74,7 @@ export default function EditPage() {
 
     const data = await res.json();
 
-    if (data.success) {
+    if (data) {
       // ✅ обновляем список с сервера
       await fetchWorks();
 
@@ -89,7 +89,7 @@ export default function EditPage() {
 
       // ✅ уведомление об успехе
       setSuccessMessage("Смена успешно добавлена");
-      location.reload(); // перезагружаем страницу, чтобы увидеть изменения
+
       setTimeout(() => setSuccessMessage(""), 1000); // убираем через 3 сек
       
     }
@@ -120,8 +120,8 @@ export default function EditPage() {
       </div>
 
       <div className={styles.works}>
-        {filteredWorks.map((work) => (
-          <div key={`${work.work_id}-${work.date}`} className={styles.row}>
+        {filteredWorks.map((work,idx) => (
+          <div key={idx} className={styles.row}>
             <span>{work.date.slice(0, 10)}</span>
             {work.is_day_off ? (
               <>
