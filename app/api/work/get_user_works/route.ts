@@ -1,20 +1,15 @@
-// app/api/work/get_user_works/route.ts
 import { NextResponse } from "next/server";
-import { sql } from "@/lib/db"; // neon подключение
+import { sql } from "@/lib/db";
 
-interface RequestBody {
-  email: string;
-}
-
-export async function POST(req: Request) {
+export async function GET(req: Request) {
   try {
-    const { email } = (await req.json()) as RequestBody;
+    const url = new URL(req.url);
+    const email = url.searchParams.get("email");
 
     if (!email) {
       return NextResponse.json({ success: false, error: "Email is required" }, { status: 400 });
     }
 
-    // 1️⃣ Находим work_id по email из таблицы profiles
     const profile = await sql`
       SELECT work_id
       FROM profiles
@@ -27,7 +22,6 @@ export async function POST(req: Request) {
 
     const userWorkId = profile[0].work_id;
 
-    // 2️⃣ Находим все записи work для этого work_id
     const userWorks = await sql`
       SELECT *
       FROM works
@@ -37,5 +31,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, works: userWorks });
   } catch  {
-    return NextResponse.json({ error: "Internal Server Error" }); }
+
+    return NextResponse.json({ success: false, error: "Internal Server Error" }, { status: 500 });
+  }
 }

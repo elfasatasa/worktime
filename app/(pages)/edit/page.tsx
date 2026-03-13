@@ -6,15 +6,15 @@ import { useRouter } from "next/navigation";
 
 import styles from "./Edit.module.scss";
 import { Work } from "@/app/types/work";
-import { works as workss } from "@/app/types/data";
 
 export default function EditPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  const [works, setWorks] = useState<Work[]>(workss);
+  const [works, setWorks] = useState<Work[]>([]);
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(""); // ✅ уведомление
 
   // Новая смена
   const [newDate, setNewDate] = useState("");
@@ -26,7 +26,23 @@ export default function EditPage() {
 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/login");
-  }, [status, router]);
+
+    if (status === "authenticated") {
+      fetchWorks();
+    }
+  }, [status, router, session?.user?.email]);
+
+  const fetchWorks = async () => {
+    if (!session?.user?.email) return;
+
+    try {
+      const res = await fetch(`/api/work/get_user_works?email=${session.user.email}`);
+      const data = await res.json();
+      if (data.success) setWorks(data.works);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   if (status === "loading") return <p>Загрузка...</p>;
 
@@ -39,16 +55,17 @@ export default function EditPage() {
     .sort((a, b) => b.date.localeCompare(a.date));
 
   const handleAddWork = async () => {
-    if (!newDate) return;
+  if (!newDate) return;
 
+  try {
     const res = await fetch("/api/work/add_work", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         email: session?.user?.email,
         date: newDate,
-        start_work: startWork,
-        end_work: endWork,
+        start_work: startWork.slice(0, 5),
+        end_work: endWork.slice(0, 5),
         has_break: hasBreak,
         is_day_off: isDayOff,
         work_type: workType
@@ -56,18 +73,36 @@ export default function EditPage() {
     });
 
     const data = await res.json();
-    setWorks([data, ...works]);
-    setIsModalOpen(false);
-    setNewDate("");
-    setStartWork("09:00");
-    setEndWork("18:00");
-    setHasBreak(false);
-    setIsDayOff(false);
-    setWorkType("packer");
-  };
+
+    if (data.success) {
+      // ✅ обновляем список с сервера
+      await fetchWorks();
+
+      // ✅ закрываем модалку и сбрасываем поля
+      setIsModalOpen(false);
+      setNewDate("");
+      setStartWork("09:00");
+      setEndWork("18:00");
+      setHasBreak(false);
+      setIsDayOff(false);
+      setWorkType("packer");
+
+      // ✅ уведомление об успехе
+      setSuccessMessage("Смена успешно добавлена");
+      location.reload(); // перезагружаем страницу, чтобы увидеть изменения
+      setTimeout(() => setSuccessMessage(""), 1000); // убираем через 3 сек
+      
+    }
+  } catch  {
+    console.error("error");
+  }
+};
+
 
   return (
     <div className={styles.container}>
+      {successMessage && <div className={styles.success}>{successMessage}</div>} {/* уведомление */}
+
       <input
         className={styles.search}
         type="text"
@@ -86,8 +121,8 @@ export default function EditPage() {
 
       <div className={styles.works}>
         {filteredWorks.map((work) => (
-      <div key={`${work.work_id}-${work.date}`} className={styles.row}>
-            <span>{work.date}</span>
+          <div key={`${work.work_id}-${work.date}`} className={styles.row}>
+            <span>{work.date.slice(0, 10)}</span>
             {work.is_day_off ? (
               <>
                 <span>-</span>
@@ -97,7 +132,7 @@ export default function EditPage() {
             ) : (
               <>
                 <span>{work.work_type}</span>
-                <span>{work.start_work} | {work.end_work}</span>
+                <span>{work.start_work.slice(0, 5)} | {work.end_work.slice(0, 5)}</span>
                 <span>{work.has_break ? "+" : "-"}</span>
               </>
             )}
@@ -143,8 +178,8 @@ export default function EditPage() {
                 <div style={{ margin: "10px 0" }}>
                   <label>Тип работы: </label>
                   <select value={workType} onChange={(e) => setWorkType(e.target.value)}>
-                    <option value="packer">Packer</option>
-                    <option value="presenter">Presenter</option>
+                    <option value="пакер">Пакер</option>
+                    <option value="презентер">Презентер</option>
                     <option value="кассир">Кассир</option>
                     <option value="мойщик">Мойщик</option>
                     <option value="повар">Повар</option>
