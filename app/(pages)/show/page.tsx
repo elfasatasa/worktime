@@ -18,7 +18,7 @@ export default function ShowPage() {
   const detailsRef = useRef<HTMLDivElement>(null);
   const [selectedWork, setSelectedWork] = useState<Work | null>(null);
   const [emptyDate, setEmptyDate] = useState<Date | null>(null);
-
+  console.log(userWorks)
   /* redirect */
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -256,7 +256,7 @@ export default function ShowPage() {
                          <span>Время работы</span>
                     <span>Тип работы</span>
                     <span>Часы</span>
-                    <span>Перерыв</span>
+                    <span>Обед</span>
                   </div>
                   <div className={styles.infoRow}>
                     <span>{new Date(selectedWork.date).toLocaleDateString()}</span>
