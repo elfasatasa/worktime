@@ -25,7 +25,7 @@ export default function EditPage() {
   const [endWork, setEndWork] = useState("01:00");
   const [hasBreak, setHasBreak] = useState(false);
   const [isDayOff, setIsDayOff] = useState(false);
-  const [workType, setWorkType] = useState("packer");
+  const [workType, setWorkType] = useState("пакер");
 const workTypeColors: Record<string, string> = {
   "пакер": "#9f0dde",       // синий
   "презентер": "#f39c12",   // оранжевый
@@ -187,7 +187,7 @@ const workTypeColors: Record<string, string> = {
     setEndWork("01:00");
     setHasBreak(false);
     setIsDayOff(false);
-    setWorkType("packer");
+    setWorkType("пакер");
     setIsModalOpen(true);
   };
 

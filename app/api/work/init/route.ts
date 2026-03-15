@@ -16,7 +16,7 @@ export async function GET() {
         end_work TIME NOT NULL,
         has_break BOOLEAN DEFAULT false,
         is_day_off BOOLEAN DEFAULT false,
-        work_type TEXT DEFAULT 'packer'
+        work_type TEXT DEFAULT 'пакер'
       );
     `;
 
