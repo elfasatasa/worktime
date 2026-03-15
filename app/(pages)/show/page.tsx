@@ -253,12 +253,15 @@ export default function ShowPage() {
                 <>
                   <div className={styles.infoRow}>
                     <span>Дата</span>
+                         <span>Время работы</span>
                     <span>Тип работы</span>
                     <span>Часы</span>
                     <span>Перерыв</span>
                   </div>
                   <div className={styles.infoRow}>
                     <span>{new Date(selectedWork.date).toLocaleDateString()}</span>
+                    <span>{selectedWork.start_work.slice(0, 5)} - {selectedWork.end_work.slice(0, 5)}</span>
+
                     <span>{selectedWork.work_type}</span>
                     <span>{getWorkedHours(selectedWork)}</span>
                     <span>{selectedWork.has_break ? "Да" : "Нет"}</span>
