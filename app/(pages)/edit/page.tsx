@@ -313,6 +313,7 @@ export default function EditPage() {
                     <option value="пакер">Пакер</option>
                     <option value="презентер">Презентер</option>
                     <option value="кассир">Кассир</option>
+                    <option value="фри">Фри</option>
                     <option value="мойщик">Мойщик</option>
                     <option value="повар">Повар</option>
                   </select>
