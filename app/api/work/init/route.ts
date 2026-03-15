@@ -9,6 +9,7 @@ export async function GET() {
     await sql`
       CREATE TABLE IF NOT EXISTS works (
         id SERIAL PRIMARY KEY,
+        unique_id TEXT NOT NULL, -- UUID для каждой записи
         work_id TEXT NOT NULL,
         date DATE NOT NULL,
         start_work TIME NOT NULL,

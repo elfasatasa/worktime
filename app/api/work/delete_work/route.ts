@@ -4,18 +4,18 @@ import { sql } from "@/lib/db"; // neon подключение
 
 interface RequestBody {
   email: string;
-  work_id: string;
+  unique_id: string;
 }
 
 export async function POST(req: Request) {
   try {
-    const { email, work_id } = (await req.json()) as RequestBody;
+    const { email, unique_id } = (await req.json()) as RequestBody;
 
-    if (!email || !work_id) {
-      return NextResponse.json({ success: false, error: "Email и work_id обязательны" }, { status: 400 });
+    if (!email || !unique_id) {
+      return NextResponse.json({ success: false, error: "Email и unique_id обязательны" }, { status: 400 });
     }
 
-    // Проверяем, что этот work_id принадлежит пользователю
+    // Проверяем, что этот unique_id принадлежит пользователю
     const profile = await sql`
       SELECT work_id
       FROM profiles
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
     // Удаляем запись из works
     const deleted = await sql`
       DELETE FROM works
-      WHERE work_id = ${work_id}
+      WHERE unique_id = ${unique_id}
       RETURNING *;
     `;
 

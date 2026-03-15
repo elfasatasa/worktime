@@ -2,6 +2,7 @@
 
 export interface Work {
   id: number;
+  unique_id: string; // UUID for the work entry
   work_id: string;
   date: string; // ISO format date string
   start_work: string; // ISO format time string

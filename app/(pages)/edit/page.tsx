@@ -42,8 +42,8 @@ export default function EditPage() {
       const res = await fetch(`/api/work/get_user_works?email=${session.user.email}`);
       const data = await res.json();
       if (data.success) setWorks(data.works);
-    } catch (err) {
-      console.error(err);
+    } catch  {
+      console.error('error');
     }
   };
 
@@ -84,6 +84,7 @@ export default function EditPage() {
         ? {
             email: session?.user?.email,
             work_id: editingWork.work_id,
+            unique_id: editingWork.unique_id,
             date: newDate,
             start_work: startWork,
             end_work: endWork,
@@ -123,13 +124,13 @@ export default function EditPage() {
             : "Смена добавлена"
         );
 
-        setTimeout(() => setSuccessMessage(""), 2000);
+        setTimeout(() => setSuccessMessage(""), 1000);
       }
     } catch (err) {
       console.error(err);
     }
 
-    setTimeout(() => setIsSaving(false), 2000);
+    setTimeout(() => setIsSaving(false), 1000);
   };
 
   const handleDeleteWork = async () => {
@@ -148,7 +149,7 @@ export default function EditPage() {
         },
         body: JSON.stringify({
           email: session?.user?.email,
-          work_id: editingWork.work_id
+          unique_id: editingWork.unique_id
         })
       });
 
@@ -162,13 +163,13 @@ export default function EditPage() {
 
         setSuccessMessage("Смена удалена");
 
-        setTimeout(() => setSuccessMessage(""), 2000);
+        setTimeout(() => setSuccessMessage(""), 1000);
       }
     } catch (err) {
       console.error(err);
     }
 
-    setTimeout(() => setIsDeleting(false), 1500);
+    setTimeout(() => setIsDeleting(false), 500);
   };
 
   const openAddModal = () => {
@@ -205,8 +206,8 @@ export default function EditPage() {
       </div>
 
       <div className={styles.works}>
-        {filteredWorks.map((work) => (
-          <div key={work.work_id} className={styles.row}>
+        {filteredWorks.map((work,idx) => (
+          <div key={idx} className={styles.row}>
             <span>{work.date.slice(0, 10)}</span>
 
             {work.is_day_off ? (
