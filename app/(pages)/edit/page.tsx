@@ -32,7 +32,9 @@ const workTypeColors: Record<string, string> = {
   "кассир": "#09d65f",      // зелёный
   "фри": "#0983ee",         // фиолетовый
   "мойщик": "#18d1ac",      // бирюзовый
-  "повар": "#ed4f10"        // красный
+  "повар": "#ed4f10",       // красный
+  "напиток": "#43ff0f",     // бирюзовый
+  "панера": "#e50606",      // красный
 };
   useEffect(() => {
 
@@ -327,6 +329,8 @@ const workTypeColors: Record<string, string> = {
                     <option value="фри">Фри</option>
                     <option value="мойщик">Мойщик</option>
                     <option value="повар">Повар</option>
+                        <option value="напиток">Напиток</option>
+                    <option value="панера">Панера</option>
                   </select>
                 </div>
               </>
