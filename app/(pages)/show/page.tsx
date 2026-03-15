@@ -3,7 +3,7 @@
 import { Work } from "@/app/types/work";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./Show.module.scss";
 
 export default function ShowPage() {
@@ -16,11 +16,11 @@ export default function ShowPage() {
 
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
-
+  const detailsRef = useRef<HTMLDivElement>(null);
   const [selectedWork, setSelectedWork] = useState<Work | null>(null);
   const [emptyDate, setEmptyDate] = useState<Date | null>(null);
 
-  /* редирект */
+  /* redirect */
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -28,14 +28,12 @@ export default function ShowPage() {
     }
   }, [status, router]);
 
-  /* загрузка работ */
+  /* fetch works */
 
   useEffect(() => {
-
     if (status === "authenticated" && session?.user?.email) {
       fetchWorks();
     }
-
   }, [status, session?.user?.email]);
 
   const fetchWorks = async () => {
@@ -57,10 +55,21 @@ export default function ShowPage() {
     }
 
     setLoading(false);
-
   };
 
-  /* подсчет часов */
+  /* hours */  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        detailsRef.current &&
+        !detailsRef.current.contains(event.target as Node)
+      ) {
+        setSelectedWork(null);
+        setEmptyDate(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const getWorkedHours = (work: Work) => {
 
@@ -78,7 +87,7 @@ export default function ShowPage() {
     return hours;
   };
 
-  /* фильтр */
+  /* filter */
 
   const filteredWorks = useMemo(() => {
 
@@ -99,7 +108,7 @@ export default function ShowPage() {
 
   }, [userWorks, fromDate, toDate]);
 
-  /* итог часов */
+  /* total hours */
 
   const totalHours = useMemo(() => {
 
@@ -115,19 +124,35 @@ export default function ShowPage() {
 
   }, [filteredWorks, fromDate, toDate]);
 
-  /* календарь */
+  /* months for calendar */
 
-  const today = new Date();
+  const months = useMemo(() => {
 
-  const daysInMonth = new Date(
-    today.getFullYear(),
-    today.getMonth() + 1,
-    0
-  ).getDate();
+    const map = new Map<string, Date>();
 
-  const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+    userWorks.forEach(work => {
 
-  /* цвет дня */
+      const date = new Date(work.date);
+      const key = `${date.getFullYear()}-${date.getMonth()}`;
+
+      if (!map.has(key)) {
+        map.set(key, new Date(date.getFullYear(), date.getMonth(), 1));
+      }
+
+    });
+
+    if (map.size === 0) {
+      const now = new Date();
+      map.set("current", new Date(now.getFullYear(), now.getMonth(), 1));
+    }
+
+    return Array.from(map.values()).sort(
+      (a, b) => a.getTime() - b.getTime()
+    );
+
+  }, [userWorks]);
+
+  /* day color */
 
   const getDayClass = (work: Work) => {
 
@@ -142,13 +167,11 @@ export default function ShowPage() {
 
   };
 
-  /* сброс фильтра */
+  /* reset filter */
 
   const resetFilter = () => {
-
     setFromDate("");
     setToDate("");
-
   };
 
   /* loading */
@@ -162,89 +185,119 @@ export default function ShowPage() {
   return (
 
     <div className={styles.container}>
+
 <br />
+     {/* FILTER */}
+
       <div className={styles.filter}>
 
-        <div className={styles.inputs}>
+        <label>
+          С&nbsp;&nbsp;
+          <input
+            type="date"
+            value={fromDate}
+            onChange={(e) => setFromDate(e.target.value)}
+          />
+        </label>
 
-          <label>
-            С &nbsp;&nbsp;
-            <input
-              type="date"
-              value={fromDate}
-              onChange={(e) => setFromDate(e.target.value)}
-            />
-          </label>
-<br />
-<br />
-          <label>
-            По&nbsp;&nbsp;
-            <input
-              type="date"
-              value={toDate}
-              onChange={(e) => setToDate(e.target.value)}
-            />
-          </label>
+        <label>
+          По&nbsp;&nbsp;
+          <input
+            type="date"
+            value={toDate}
+            onChange={(e) => setToDate(e.target.value)}
+          />
+        </label>
 
-        </div>
+      
 
-        <button
+      
+
+      </div>
+      <div style={{display:"flex" , alignItems:"center", justifyContent:"space-around"}}>
+          {totalHours !== null && (
+          <div className={styles.total}>
+            Всего часов  <span>{totalHours}</span>
+          </div>
+        )}
+  <button
           className={styles.resetBtn}
           onClick={resetFilter}
         >
           Сбросить
         </button>
-
-        {totalHours !== null && (
-          <div className={styles.total}>
-            Всего часов: <span>{totalHours}</span>
-          </div>
-        )}
-
       </div>
+      {/* CALENDAR */}
 
-      {/* календарь */}
+      <div className={styles.calendarScroll}>
 
-      <div className={styles.calendar}>
+        {months.map(monthDate => {
 
-        {days.map(day => {
+          const year = monthDate.getFullYear();
+          const month = monthDate.getMonth();
 
-          const work = userWorks.find(
-            w => new Date(w.date).getDate() === day
-          );
+          const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-          const colorClass = work ? getDayClass(work) : "";
+          const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+
+          const title = monthDate.toLocaleString("ru", {
+            month: "long",
+            year: "numeric"
+          });
 
           return (
 
-            <div
-              key={day}
-              className={`${styles.day} ${colorClass}`}
-              onClick={() => {
+            <div key={title} className={styles.monthBlock}>
 
-                if (work) {
+              <h4 className={styles.monthTitle}>
+                {title}
+              </h4>
 
-                  setSelectedWork(work);
-                  setEmptyDate(null);
+              <div className={styles.calendar}>
 
-                } else {
+                {days.map(day => {
 
-                  setSelectedWork(null);
+                  const work = userWorks.find(w => {
 
-                  setEmptyDate(
-                    new Date(
-                      today.getFullYear(),
-                      today.getMonth(),
-                      day
-                    )
+                    const d = new Date(w.date);
+
+                    return (
+                      d.getFullYear() === year &&
+                      d.getMonth() === month &&
+                      d.getDate() === day
+                    );
+
+                  });
+
+                  return (
+
+                    <div
+                      key={day}
+                      className={`${styles.day} ${work ? getDayClass(work) : ""}`}
+                      onClick={() => {
+
+                        if (work) {
+
+                          setSelectedWork(work);
+                          setEmptyDate(null);
+
+                        } else {
+
+                          setSelectedWork(null);
+                          setEmptyDate(new Date(year, month, day));
+
+                        }
+
+                      }}
+                    >
+                      {day}
+                    </div>
+
                   );
 
-                }
+                })}
 
-              }}
-            >
-
-              {day}
+              </div>
 
             </div>
 
@@ -254,59 +307,35 @@ export default function ShowPage() {
 
       </div>
 
-      {/* если есть запись */}
+      {/* DETAILS */}
 
-      {selectedWork && (
+      {(selectedWork || emptyDate) && (
+        <div ref={detailsRef}>
+          {selectedWork && (
+            <div className={styles.details}>
+              <div className={styles.infoRow}>
+                <span>{new Date(selectedWork.date).toLocaleDateString()}</span>
+                <span>{selectedWork.work_type}</span>
+                <span>{selectedWork.is_day_off ? "Выходной" : getWorkedHours(selectedWork)}</span>
+                <span>{selectedWork.has_break ? "Да" : "Нет"}</span>
+              </div>
+            </div>
+          )}
 
-        <div className={styles.details}>
-
-          <h3>Детали работы</h3>
-
-          <p>
-            <strong>Дата:</strong>{" "}
-            {new Date(selectedWork.date).toLocaleDateString()}
-          </p>
-
-          <p>
-            <strong>Тип работы:</strong> {selectedWork.work_type}
-          </p>
-
-          <p>
-            <strong>Часы:</strong>{" "}
-            {selectedWork.is_day_off
-              ? "Выходной"
-              : getWorkedHours(selectedWork)}
-          </p>
-
-          <p>
-            <strong>Обед:</strong>{" "}
-            {selectedWork.is_day_off
-              ? "-"
-              : selectedWork.has_break
-                ? "Есть"
-                : "Нет"}
-          </p>
-
+          {emptyDate && (
+            <div className={styles.details}>
+              <h3>{emptyDate.toLocaleDateString()}</h3>
+              <p>На эту дату нет записи</p>
+            </div>
+          )}
         </div>
-
       )}
 
-      {/* если нет записи */}
-
-      {emptyDate && (
-
-        <div className={styles.details}>
-
-          <h3>{emptyDate.toLocaleDateString()}</h3>
-
-          <p>
-            Вы пока ничего не добавили на эту дату
-          </p>
-
-        </div>
-
-      )}
-
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
     </div>
 
   );
