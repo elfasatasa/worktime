@@ -28,10 +28,11 @@
 }
 
 .resetBtn{
-  background:#ff00c8;
+  background:#000000;
   border:none;
   color:white;
   padding:8px;
+  font-weight: 600;
   border-radius:8px;
   cursor:pointer;
 }
@@ -42,7 +43,7 @@
 }
 
 .calendarScroll{
-  max-height:270px;
+  max-height:280px;
   overflow-y:auto;
   padding-right:4px;
 }

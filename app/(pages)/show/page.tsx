@@ -311,16 +311,23 @@ export default function ShowPage() {
 
       {(selectedWork || emptyDate) && (
         <div ref={detailsRef}>
-          {selectedWork && (
-            <div className={styles.details}>
-              <div className={styles.infoRow}>
-                <span>{new Date(selectedWork.date).toLocaleDateString()}</span>
-                <span>{selectedWork.work_type}</span>
-                <span>{selectedWork.is_day_off ? "Выходной" : getWorkedHours(selectedWork)}</span>
-                <span>{selectedWork.has_break ? "Да" : "Нет"}</span>
-              </div>
-            </div>
-          )}
+         {selectedWork && (
+  <div className={styles.details}>
+    {selectedWork.is_day_off ? (
+      <div className={styles.infoRow}>
+      
+         <h4> {new Date(selectedWork.date).toLocaleDateString()}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;У вас выходной :)</h4>
+     </div>
+    ) : (
+      <div className={styles.infoRow}>
+        <span>{new Date(selectedWork.date).toLocaleDateString()}</span>
+        <span>{selectedWork.work_type}</span>
+        <span>{getWorkedHours(selectedWork)}</span>
+        <span>{selectedWork.has_break ? "Да" : "Нет"}</span>
+      </div>
+    )}
+  </div>
+)}
 
           {emptyDate && (
             <div className={styles.details}>
