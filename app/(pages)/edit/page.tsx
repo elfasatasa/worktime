@@ -26,7 +26,14 @@ export default function EditPage() {
   const [hasBreak, setHasBreak] = useState(false);
   const [isDayOff, setIsDayOff] = useState(false);
   const [workType, setWorkType] = useState("packer");
-
+const workTypeColors: Record<string, string> = {
+  "пакер": "#9f0dde",       // синий
+  "презентер": "#f39c12",   // оранжевый
+  "кассир": "#09d65f",      // зелёный
+  "фри": "#0983ee",         // фиолетовый
+  "мойщик": "#18d1ac",      // бирюзовый
+  "повар": "#ed4f10"        // красный
+};
   useEffect(() => {
     if (status === "unauthenticated") router.push("/login");
 
@@ -218,7 +225,9 @@ export default function EditPage() {
               </>
             ) : (
               <>
-                <span>{work.work_type}</span>
+               <span style={{ color: workTypeColors[work.work_type] || "black" }}>
+  {work.work_type}
+</span>
                 <span>
                   {work.start_work.slice(0, 5)} | {work.end_work.slice(0, 5)}
                 </span>
@@ -346,7 +355,7 @@ export default function EditPage() {
                 <button
                   onClick={handleDeleteWork}
                   disabled={isDeleting}
-                  style={{ background: "#ff4d4f", color: "white" }}
+                  style={{ background: "#ea0a0e", color: "white", border: "none" }}
                 >
                   {isDeleting ? "Удаление..." : "Удалить"}
                 </button>
