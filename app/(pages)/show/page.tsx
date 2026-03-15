@@ -319,12 +319,21 @@ export default function ShowPage() {
          <h4> {new Date(selectedWork.date).toLocaleDateString()}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;У вас выходной :)</h4>
      </div>
     ) : (
+     <>
+     
       <div className={styles.infoRow}>
+        <span>Дата</span>
+        <span>Тип работы</span>
+        <span>Часы</span>
+        <span>Перерыв</span>
+      </div>
+       <div className={styles.infoRow}>
         <span>{new Date(selectedWork.date).toLocaleDateString()}</span>
         <span>{selectedWork.work_type}</span>
         <span>{getWorkedHours(selectedWork)}</span>
         <span>{selectedWork.has_break ? "Да" : "Нет"}</span>
       </div>
+     </>
     )}
   </div>
 )}
