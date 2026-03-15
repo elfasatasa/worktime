@@ -11,7 +11,7 @@ export async function GET() {
         id SERIAL PRIMARY KEY,
         unique_id TEXT NOT NULL, -- UUID для каждой записи
         work_id TEXT NOT NULL,
-        date DATE NOT NULL,
+        date TEXT NOT NULL,
         start_work TIME NOT NULL,
         end_work TIME NOT NULL,
         has_break BOOLEAN DEFAULT false,

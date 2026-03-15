@@ -35,6 +35,7 @@ const workTypeColors: Record<string, string> = {
   "повар": "#ed4f10"        // красный
 };
   useEffect(() => {
+
     if (status === "unauthenticated") router.push("/login");
 
     if (status === "authenticated") {
@@ -81,7 +82,7 @@ const workTypeColors: Record<string, string> = {
     if (!newDate || isSaving) return;
 
     setIsSaving(true);
-
+ 
     try {
       const url = editingWork
         ? "/api/work/edit_work"
@@ -133,8 +134,8 @@ const workTypeColors: Record<string, string> = {
 
         setTimeout(() => setSuccessMessage(""), 1000);
       }
-    } catch (err) {
-      console.error(err);
+    } catch  {
+      console.error("error");
     }
 
     setTimeout(() => setIsSaving(false), 1000);
@@ -351,7 +352,11 @@ const workTypeColors: Record<string, string> = {
                   : "Сохранить"}
               </button>
 
-              {editingWork && (
+            
+              <button onClick={() => setIsModalOpen(false)}>
+                Отмена
+              </button>
+                {editingWork && (
                 <button
                   onClick={handleDeleteWork}
                   disabled={isDeleting}
@@ -361,9 +366,6 @@ const workTypeColors: Record<string, string> = {
                 </button>
               )}
 
-              <button onClick={() => setIsModalOpen(false)}>
-                Отмена
-              </button>
             </div>
 
           </div>
