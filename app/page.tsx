@@ -21,19 +21,17 @@ export default function Home() {
       },
       body: JSON.stringify({ email }),
     })
-      .then(res => res.json())
-      .then(data => {
-        console.log("Server response:", data)
-      })
+      
       .catch(err => {
         console.error("Error:", err)
       })
   }, [session])
 
   return (
-    <>
-      <h1>Main Page</h1>
-      {session?.user?.email && <p>Logged in as: {session.user.email}</p>}
-    </>
+    <div>
+<br />
+<br />
+      Есть новые идеи или нужно помощь? Пиши в телеграм <a href="https://t.me/elfasatasa" target="_blank">@elfasatasa </a>
+    </div>
   )
 }

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./Show.module.scss";
 
+
 export default function ShowPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -18,8 +19,11 @@ export default function ShowPage() {
   const detailsRef = useRef<HTMLDivElement>(null);
   const [selectedWork, setSelectedWork] = useState<Work | null>(null);
   const [emptyDate, setEmptyDate] = useState<Date | null>(null);
-  console.log(userWorks)
+
+
   /* redirect */
+
+
   useEffect(() => {
     if (status === "unauthenticated") {
       router.replace("/login");
@@ -42,8 +46,8 @@ export default function ShowPage() {
       if (data.success) {
         setUserWorks(data.works);
       }
-    } catch (error) {
-      console.error(error);
+    } catch  {
+      console.error('error');
     }
     setLoading(false);
   };

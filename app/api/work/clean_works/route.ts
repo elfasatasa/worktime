@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
 const deleteResult = await sql`
   DELETE FROM works
   WHERE work_id = ${workId}
-    AND TO_DATE(date, 'YYYY-MM-DD') < CURRENT_DATE - INTERVAL '45 days'
+    AND TO_DATE(date, 'YYYY-MM-DD') < CURRENT_DATE - INTERVAL '35 days'
   RETURNING id
 `;
 
