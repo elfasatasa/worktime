@@ -76,16 +76,21 @@
 
 .day:hover{
   transform:scale(1.05);
-  box-shadow:0 0 6px #00f7ff;
+ border: 1px solid white;
+
 }
 
-.today{
-  background:#ff00c8;
+.today {
+  background: #000000;
+  border: 2px solid white;
+  font-weight: 900;
 }
+
+
 
 .dayOff{
   background:#00ff9c;
-  color:black;
+  color: black;
 }
 
 .past{
@@ -93,7 +98,8 @@
 }
 
 .workDay{
-  background:#001eff;
+  background: #04cbba;
+  color : black
 }
 
 .details{

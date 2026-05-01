@@ -194,7 +194,7 @@ export default function ShowPage() {
 
           return (
             <div key={title} className={styles.monthBlock}>
-              <h4 className={styles.monthTitle}>{title}</h4>
+              <h4 className={styles.monthTitle}>  {title.slice(0,-2)}</h4>
 
               <div className={styles.calendar}>
                 {/* Заголовки дней недели */}
