@@ -30,12 +30,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'No work_id for this profile' });
     }
 
-    // 2️⃣ Удаляем все работы старше 45 дней
+    // 2️⃣ Удаляем все работы старше 25 дней
     // Преобразуем text -> date с помощью ::date
 const deleteResult = await sql`
   DELETE FROM works
   WHERE work_id = ${workId}
-    AND TO_DATE(date, 'YYYY-MM-DD') < CURRENT_DATE - INTERVAL '35 days'
+    AND TO_DATE(date, 'YYYY-MM-DD') < CURRENT_DATE - INTERVAL '25 days'
   RETURNING id
 `;
 
